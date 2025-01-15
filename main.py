@@ -143,7 +143,7 @@ async def main():
             "Ссылка": product_links
         }
         df = pd.DataFrame(new_slovar)
-        file_path = "\\tg-storage01\\Аналитический отдел\\Проекты\\Python\\Парсинг конкрунтов\\Выгрузки\\Сатурн\\Выгрузка цен.xlsx"
+        file_path = "\\\\tg-storage01\\Аналитический отдел\\Проекты\\Python\\Парсинг конкрунтов\\Выгрузки\\Сатурн\\Выгрузка цен.xlsx"
 
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -155,4 +155,8 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        logger.error(e)
+        raise e
