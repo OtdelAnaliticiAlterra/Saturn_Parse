@@ -3,12 +3,10 @@ import asyncio
 from selectolax.parser import HTMLParser
 import time
 import pandas as pd
-import openpyxl
 import os
 from dotenv import load_dotenv, find_dotenv
 from telegram_bot_logger import TgLogger
 from pathlib import Path
-
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -21,6 +19,7 @@ logger = TgLogger(
     token=os.environ.get('LOGGER_BOT_TOKEN'),
     chats_ids_filename=CHATS_IDS,
 )
+
 
 async def get_response(session, url, retries=3):
     """Получение ответа от сервера с обработкой ошибок"""
@@ -72,7 +71,7 @@ async def parse_products(session):
 
             max_page = int(max(page))
 
-            for num in range(1,max_page+1):
+            for num in range(1, max_page + 1):
                 response_text = await get_response(session, f"{elem}?&page={num}&per_page=20")
                 parser = HTMLParser(response_text)
                 for itm in parser.css("li.catalog_Level2__goods_list__item"):
@@ -90,13 +89,13 @@ async def parse_products(session):
                         if itm.css('div.goods_card_footer div.goods_card_price_discount_value span'):
                             for item in itm.css('div.goods_card_footer div.goods_card_price_discount_value span'):
                                 for rate in dratel:
-                                    price_list.append(str(int(item.text().replace(' ',''))*float(rate)))
+                                    price_list.append(str(int(item.text().replace(' ', '')) * float(rate)))
                         else:
                             for item in itm.css('div.goods_card_footer div.goods_card_price_value span'):
 
                                 for rate in dratel:
                                     if ',' in item.text():
-                                        price_list.append(str(float(item.text().replace(',','.'))*float(rate)))
+                                        price_list.append(str(float(item.text().replace(',', '.')) * float(rate)))
                                     else:
                                         price_list.append(str(float(item.text().replace(' ', '')) * float(rate)))
 
@@ -134,7 +133,7 @@ async def main():
         product_links, article_list, name_list, price_list = await parse_products(session)
 
         new_slovar = {
-            "Код конкурента":  "01-01028082",
+            "Код конкурента": "01-01028082",
             "Конкурент": "Сатурн",
             "Артикул": article_list,
             "Наименование": name_list,
