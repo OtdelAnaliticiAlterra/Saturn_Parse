@@ -90,15 +90,15 @@ async def parse_products(session):
                         if itm.css('div.goods_card_footer div.goods_card_price_discount_value span'):
                             for item in itm.css('div.goods_card_footer div.goods_card_price_discount_value span'):
                                 for rate in dratel:
-                                    price_list.append(int(item.text().replace(' ',''))*float(rate))
+                                    price_list.append(str(int(item.text().replace(' ',''))*float(rate)))
                         else:
                             for item in itm.css('div.goods_card_footer div.goods_card_price_value span'):
 
                                 for rate in dratel:
                                     if ',' in item.text():
-                                        price_list.append(float(item.text().replace(',','.'))*float(rate))
+                                        price_list.append(str(float(item.text().replace(',','.'))*float(rate)))
                                     else:
-                                        price_list.append(float(item.text().replace(' ', '')) * float(rate))
+                                        price_list.append(str(float(item.text().replace(' ', '')) * float(rate)))
 
                         for item in itm.css('div.goods_card_articul'):
                             article_list.append(item.text())
@@ -111,16 +111,16 @@ async def parse_products(session):
                         if itm.css('div.goods_card_footer div.goods_card_price_discount_value span'):
                             for item in itm.css('div.goods_card_footer div.goods_card_price_discount_value span'):
                                 if ',' in item.text():
-                                    price_list.append(float(item.text().replace(',', '.')))
+                                    price_list.append((item.text().replace(',', '.')))
                                 else:
-                                    price_list.append(float(item.text().replace(' ', '')))
+                                    price_list.append((item.text().replace(' ', '')))
 
                         else:
                             for item in itm.css('div.goods_card_footer div.goods_card_price_value span'):
                                 if ',' in item.text():
-                                    price_list.append(float(item.text().replace(',', '.')))
+                                    price_list.append((item.text().replace(',', '.')))
                                 else:
-                                    price_list.append(float(item.text().replace(' ', '')))
+                                    price_list.append((item.text().replace(' ', '')))
 
                         for item in itm.css('div.goods_card_articul'):
                             article_list.append(item.text())
@@ -138,7 +138,7 @@ async def main():
             "Конкурент": "Сатурн",
             "Артикул": article_list,
             "Наименование": name_list,
-            "Вид цены": "Цена на сайте",
+            "Вид цены": "Цена СатурнБарнаул",
             "Цена": price_list,
             "Ссылка": product_links
         }
@@ -148,7 +148,7 @@ async def main():
         if os.path.exists(file_path):
             os.remove(file_path)
 
-        df.to_excel(file_path, sheet_name="Лист 1", index=False)
+        df.to_excel(file_path, sheet_name="Данные", index=False)
         print("Парсинг выполнен")
     end = time.time()
     print("Время", (end - start))
